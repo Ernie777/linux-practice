@@ -1,7 +1,0 @@
-ls
-cat
-cd
-chmod
-rm
-mv
-vim

@@ -1,4 +1,0 @@
-SQL Injection
-SQL Blind
-SQL ERROR
-SQL OOB
