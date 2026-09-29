@@ -1,113 +1,117 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
+#include <ctype.h>
 
-int main()
-{
-    int ans[4],user[4],i,j,n,A,B;
-    int pass;
-    char yn;
-    srand(time(0));
-    do
-    {
-        for(i=0;i<4;i++)
-        {
-            ans[i]=rand()%10;
-            while(1)//ans 不重複
-            {
-                pass=0;
-                for(j=1;j<=i;j++)
-                {
-                    if(ans[i]==ans[i-j])
-                    {
-                        ans[i]=rand()%10;
-                        pass=1;
-                    }
-                    if(pass)
-                    {break;}
-                }
-                if(pass==0)
-                {break;}
-            }
+// 產生 4 位數答案，數字不重複
+void generateAnswer(char answer[]) {
+    int used[10] = {0};
+    
+    for (int i = 0; i < 4; i++) {
+        int digit;
+        
+        do {
+            digit = rand() % 10;
+        } while (used[digit]);
+        
+        used[digit] = 1;
+        answer[i] = digit + '0';
+    }
+    
+    answer[4] = '\0';
+}
+
+// 檢查輸入是否為「剛好四位數字」
+int isValidInput(char input[]) {
+    int len = strlen(input);
+
+    // 一定要剛好 4 個字
+    if (len != 4) {
+        return 0;
+    }
+
+    // 每一個字元都必須是數字
+    for (int i = 0; i < 4; i++) {
+        if (!isdigit((unsigned char)input[i])) {
+            return 0;
         }
-        for(n=1;n<=10;n++)//game start
-        {
-            A=0;B=0;
-            printf("請輸入四位不重複的數字：");
-            for(i=0;i<4;i++)//輸入
-            {
-                scanf("%d",&user[i]);
-            }
-            while(1)//檢查重複
-            {
-                pass=0;
-                for(i=0;i<4;i++)//檢查重複
-                {
-                    for(j=1;j<=i;j++)
-                    {
-                        if(user[i]==user[i-j])
-                        {
-                            pass=1;
-                        }
-                        if(pass)
-                        {break;}
-                    }
-                    if(pass)
-                    {break;}
-                }
-                if(pass)//重新輸入
-                {
-                    printf("數字重複，請重新輸入：");
-                    for(i=0;i<4;i++)
-                    {
-                        scanf("%d",&user[i]);
-                    }
-                }
-                else{break;}
-            }
-            for(i=0;i<4;i++)//A
-            {
-                if(user[i]==ans[i])
-                {
-                    A+=1;
-                }
-            }
-            for(i=0;i<4;i++)//B
-            {
-                for(j=0;j<4;j++)
-                {
-                    if(user[i]==ans[j])
-                    {
-                        B+=1;
-                    }
-                }
-            }
-            B-=A;
-            printf("%02d.",n);
-            for(i=0;i<4;i++)
-            {
-                printf(" %d",user[i]);
-            }
-            printf(" %dA%dB\n",A,B);
-            if(A==4)
-            {
-                break;
-            }
+    }
+
+    return 1;
+}
+
+// 計算幾A幾B
+void calculateAB(char answer[], char guess[], int *A, int *B) {
+    int answerCount[10] = {0};
+    int guessCount[10] = {0};
+
+    *A = 0;
+    *B = 0;
+
+    // 先計算 A
+    for (int i = 0; i < 4; i++) {
+        if (answer[i] == guess[i]) {
+            (*A)++;
         }
-        if(A==4)
-        {
-            printf("恭喜你答對了！答案就是");
+    }
+
+    // 統計兩邊各數字出現次數
+    for (int i = 0; i < 4; i++) {
+        answerCount[answer[i] - '0']++;
+        guessCount[guess[i] - '0']++;
+    }
+
+    // 計算總共有幾個數字相同
+    for (int i = 0; i < 10; i++) {
+        *B += (answerCount[i] < guessCount[i])
+             ? answerCount[i]
+             : guessCount[i];
+    }
+
+    // A 不算在 B 裡
+    *B -= *A;
+}
+
+int main() {
+    char answer[5];
+    char guess[100];
+    int A, B;
+    int count = 0;
+
+    srand((unsigned int)time(NULL));
+
+    generateAnswer(answer);
+
+    printf("===== 幾A幾B =====\n");
+    printf("請輸入 4 位數字\n\n");
+
+    while (1) {
+        printf("請輸入答案：");
+
+        fgets(guess, sizeof(guess), stdin);
+
+        // 移除最後的換行
+        guess[strcspn(guess, "\n")] = '\0';
+
+        // 防呆
+        if (!isValidInput(guess)) {
+            printf("輸入錯誤！請輸入「剛好 4 個數字」。\n\n");
+            continue;
         }
-        else
-        {
-            printf("再接再厲！答案是");
+
+        count++;
+
+        calculateAB(answer, guess, &A, &B);
+
+        printf("%dA%dB\n\n", A, B);
+
+        if (A == 4) {
+            printf("恭喜你答對了！\n");
+            printf("總共猜了 %d 次。\n", count);
+            break;
         }
-        for(i=0;i<4;i++)
-        {
-            printf(" %d",ans[i]);
-        }
-        printf("\n\n要在玩一次嗎？(Y/N)");
-        scanf(" %c",&yn);
-    }while(yn=='Y'||yn=='y');
+    }
+
     return 0;
 }
