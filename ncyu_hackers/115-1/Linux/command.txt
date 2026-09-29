@@ -1,0 +1,32 @@
+Obedient Cat -> cat
+Tab, Tab, Attack -> Tab
+what's a net cat? -> nc 
+repetitions -> base64
+Magikarp Ground Mission -> ssh, cd, cat
+
+First Grep -> grep
+Big Zip -> unzip, grep -r
+runme.py -> python
+fixme1.py -> python, bebug, vim
+fixme2.py -> python, bebug, vim
+useless -> ssh, ./ , man
+
+ls 
+pwd 
+cd 
+cat 
+ls -la
+absolute path v.s  relative path
+wget
+unzip
+nc
+ssh
+file
+mv
+cp
+touch
+mkdir
+rm
+grep
+python
+vim
