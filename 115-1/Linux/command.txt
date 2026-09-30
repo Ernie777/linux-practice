@@ -1,0 +1,26 @@
+man [command]
+[command] --help
+clear
+
+ls [options] [file]
+pwd
+cd [dir]
+cat [file]
+
+wget [URL] -O [fileName]
+unzip [file]
+nc [host] [port]
+ssh [user]@[host] -p [port]
+
+file [file/dir]
+mv [sourceFile/Dir] [destFile/Dir]
+cp [options] [sourceFile/Dir] [destFile/Dir]
+touch [fileName]
+mkdir [dirName]
+rm [option] [file]
+
+grep [options] [pattern] [file]
+python3 [pythonFile]
+gcc [cFile] -o [fileName]
+./[ELFfile]
+vim [file]
